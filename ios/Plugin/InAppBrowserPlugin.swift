@@ -30,6 +30,7 @@ public class InAppBrowserPlugin: CAPPlugin {
     var currentPluginCall: CAPPluginCall?
     var isPresentAfterPageLoad = false
     var webViewController: WKWebViewController?
+    var jsCode: String?
 
     private func setup() {
         self.isSetupDone = true
@@ -165,12 +166,12 @@ public class InAppBrowserPlugin: CAPPlugin {
             }
             self.webViewController?.ignoreUntrustedSSLError = ignoreUntrustedSSLError
             self.navigationWebViewController = UINavigationController.init(rootViewController: self.webViewController!)
-            self.navigationWebViewController?.navigationBar.isTranslucent = false
-            self.navigationWebViewController?.toolbar.isTranslucent = false
+            self.navigationWebViewController?.navigationBar.isTranslucent = true
+            self.navigationWebViewController?.toolbar.isTranslucent = true
             self.navigationWebViewController?.navigationBar.backgroundColor = backgroundColor
             self.navigationWebViewController?.toolbar.backgroundColor = backgroundColor
             self.navigationWebViewController?.toolbar.tintColor = backgroundColor == UIColor.black ? UIColor.white : UIColor.black
-            self.navigationWebViewController?.modalPresentationStyle = .fullScreen
+            self.navigationWebViewController?.modalPresentationStyle = .automatic
             if toolbarType == "blank" {
                 self.navigationWebViewController?.navigationBar.isHidden = true
             }
@@ -220,7 +221,8 @@ public class InAppBrowserPlugin: CAPPlugin {
             call.reject("Cannot get script to execute")
             return
         }
-        self.webViewController?.executeScript(script: script)
+        self.jsCode = script
+        call.resolve()
     }
 
     func isHexColorCode(_ input: String) -> Bool {
