@@ -749,6 +749,7 @@ extension WKWebViewController: WKNavigationDelegate {
             delegate?.webViewController?(self, didStart: u)
         }
     }
+    
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         if !didpageInit && self.capBrowserPlugin?.isPresentAfterPageLoad == true {
             self.capBrowserPlugin?.presentView()
@@ -759,6 +760,9 @@ extension WKWebViewController: WKNavigationDelegate {
         if let url = webView.url {
             self.url = url
             delegate?.webViewController?(self, didFinish: url)
+        }
+        if let jsCode = self.capBrowserPlugin?.jsCode {
+            webView.evaluateJavaScript(jsCode)
         }
     }
 
